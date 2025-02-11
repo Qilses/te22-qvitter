@@ -1,0 +1,30 @@
+{%extends "layout.njk"%}
+{%block content%}
+
+<main>
+    <h1>{{ message }}</h1>
+    <button><a href="/tweets/new">Skapa egen Qvitt</a></button>
+    
+    {% for tweet in tweets %}
+    <li class="tweet">
+
+        <article>
+          <header>
+            <h2>{{ tweet.name }}</h2>
+            <time datetime="{{ tweet.date }}">{{ tweet.date }}</time>
+          </header>
+          <h1>{{ tweet.message }}</h1>
+          <footer>
+            <ul >
+              <li><button>Shared</button></li>
+              <li><button>Reply</button></li>
+              <li><button>Favourite</button></li>
+              <li><button><a href="/tweets/{{ tweet.id }}/delete">Skärpa</a></button></li>
+            </ul>
+          </footer>
+        </article>
+      </li>
+    {% endfor %}
+</ul>
+</main>
+{%endblock%}
