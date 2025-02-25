@@ -2,7 +2,7 @@ import "dotenv/config"
 import express from "express"
 import nunjucks from "nunjucks"
 import bodyParser from "body-parser"
-import logger from "morgan"
+import morgan from "morgan"
   
 import tweetRouter from "./routes/tweet.js"
 

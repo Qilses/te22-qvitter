@@ -24,8 +24,6 @@ router.get("/:id/delete", async (req, res) => {
 
     await pool.promise().query("DELETE FROM tweet WHERE id = ?", [id])
     res.redirect("/")
-
-
 })
 
 router.get("/new", (req, res) => {
@@ -47,18 +45,33 @@ router.post("/new", async (req, res) => {
     res.redirect("/")
 })
 
-router.get("/user", (req, res) => {
-   `
-        SELECT tweet.*, user.name 
-        FROM tweet
-        JOIN user
-        ON tweet.author_id = user.id;
-        `
-    res.render("user.njk", {
-        title: "Vem är du?"
-        
-    })
-})
+
+
+router.get("/:id/edit", async (req, res) => {
+    const id = req.params.id
+    if (!Number.isInteger(Number(id))) { return res.status(400).send("Invalid ID") }
+    const [rows] = await pool.promise().query("SELECT * FROM tweet WHERE id = ?", [id])
+    if (rows.length === 0) {
+      return res.status(404).send("Tweet not found")
+    }
+    res.render("edit.njk", { tweet: rows[0] })
+  })
+
+router.post("/edit",
+    body("id").isInt(),
+    body("message").isLength({ min: 1, max: 130 }),
+    body("message").escape(),
+    async (req, res) => {
+    const errors = validationResult(req)
+    console.log(errors)
+    if (!errors.isEmpty()) { return res.status(400).send("Invalid input") }
+  
+    const { id, message } = matchedData(req) // req.params.message varför inte?
+    const timestamp = new Date().toISOString().slice(0, 19).replace("T", " ")
+    console.log(timestamp)
+    await pool.promise().query("UPDATE tweet SET message = ?, updated_at = ? WHERE id = ?", [message, timestamp, id])
+    res.redirect("/")
+  })
 
 
 export default router
