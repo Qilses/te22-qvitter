@@ -16,20 +16,20 @@ https://github.com/Qilses/te22-qvitter
 
 **Hur har du arbetat med säkerheten? Tvätta / validera.**
 ----------------------------------------------------------------------
-    Views alla routes är i en skyddad map vilket gör att du inte kan komma åt mappen utifrån detta gör att du inte ka edita länken för att ta andävndare till andra ställe. 
+Views alla routes är i en skyddad map vilket gör att du inte kan komma åt mappen utifrån detta gör att du inte ka edita länken för att ta andävndare till andra ställe. 
 
-    Samma sak med views mappen. den finns inte i public mappen så ingen kan komma åt dom utrifrån och ändra något på servern. Du kan självfallet ändra saker på din egen client men det går inte att komma åt servern från den clienten. 
+Samma sak med views mappen. den finns inte i public mappen så ingen kan komma åt dom utrifrån och ändra något på servern. Du kan självfallet ändra saker på din egen client men det går inte att komma åt servern från den clienten. 
 
-    Sen så har vi en .gitignore fil som säger till vsco de att ignorera att laddu upp dessa till github. Det som finns där är .env & node_module, env är inloggning till servern och sägger till dom vart servern finns. node_module ignorera man för att det är en gigantisk mapp som tar uttryme och det uppdateras ofta så tar mycke plats.
+Sen så har vi en .gitignore fil som säger till vsco de att ignorera att laddu upp dessa till github. Det som finns där är .env & node_module, env är inloggning till servern och sägger till dom vart servern finns. node_module ignorera man för att det är en gigantisk mapp som tar uttryme och det uppdateras ofta så tar mycke plats.
 
-    La inte till något skäl för att jag inte hadde tid med det. Tänkte göra så att man kunde ändra Andvändare och lägga till en login men det hadde jag inte tid med. 
+La inte till något skäl för att jag inte hadde tid med det. Tänkte göra så att man kunde ändra Andvändare och lägga till en login men det hadde jag inte tid med. 
 
 
 
 
 **Har du gjort något extra funktion och hur fungerar den?**
 -
-    Har bara lagt till css "flare", så att listor blir mer stilrena och att kanpparna blir större när man hovrar över dom, Finns fortfarande saker som jag skulle vilja fixa men just nu om detta är sista lektionen vi har på detta så har jag inte tid med det.
+Har bara lagt till css "flare", så att listor blir mer stilrena och att kanpparna blir större när man hovrar över dom, Finns fortfarande saker som jag skulle vilja fixa men just nu om detta är sista lektionen vi har på detta så har jag inte tid med det.
 
     
 
