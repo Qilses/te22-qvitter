@@ -28,7 +28,7 @@ https://github.com/Qilses/te22-qvitter
 
 
 **Har du gjort något extra funktion och hur fungerar den?**
-----------------------------------------------------------------------
+-
     Har bara lagt till css "flare", så att listor blir mer stilrena och att kanpparna blir större när man hovrar över dom, Finns fortfarande saker som jag skulle vilja fixa men just nu om detta är sista lektionen vi har på detta så har jag inte tid med det.
 
     
