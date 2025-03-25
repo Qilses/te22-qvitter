@@ -1,5 +1,7 @@
 import express from "express"
 import pool from "../db.js"
+import { body, matchedData, validationResult } from "express-validator"
+
 
 const router = express.Router()
 
@@ -19,9 +21,10 @@ router.get("/", async (req, res) => {
 
 
 router.get("/:id/delete", async (req, res) => {
-
     const id = req.params.id
+    body("id").isInt(),
 
+    
     await pool.promise().query("DELETE FROM tweet WHERE id = ?", [id])
     res.redirect("/")
 })
