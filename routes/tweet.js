@@ -7,6 +7,7 @@ const router = express.Router()
 
 
 //routes här under 
+  //Index.njk är default route.
 router.get("/", async (req, res) => {
     const [tweets] = await pool.promise().query(
         `   
