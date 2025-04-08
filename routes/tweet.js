@@ -90,7 +90,6 @@ router.post("/edit",
   router.post("/login", async (req, res) => {
     console.log(req.body)
     const { username, password } = req.body;
-
     // Hämta användare från databasen
     const [result] = await pool.promise().query(
         ` 
