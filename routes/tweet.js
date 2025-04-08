@@ -1,13 +1,12 @@
 import express, { Router } from "express"
 import pool from "../db.js"
 import { body, matchedData, validationResult } from "express-validator"
-
+import bcrypt from "bcrypt" 
 
 const router = express.Router()
 
 
-//routes här under 
-  //Index.njk är default route.
+//routes här under, Index.njk är default route.
 router.get("/", async (req, res) => {
     const [tweets] = await pool.promise().query(
         `   
@@ -106,7 +105,7 @@ router.post("/edit",
     } else {
         bcrypt.compare(password, result[0].user_password, function (err, result) {
             if (result == true) {
-                res.render("dashboard.njk", {})
+                res.render("tweet.njk", {})
             } else {
                 res.render("login.njk", {
                     title: "Logga in!",
