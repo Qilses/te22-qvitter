@@ -1,11 +1,31 @@
 {%extends "layout.njk"%}
 {%block content%}
-    <main>
-        <h1>{{message}}</h1>
+<style>
+    body,
+    html {
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 4rem;
+        font-weight: lighter;
+    }
+
+    .buttoncont {
+        display: grid;
+        grid-gap: 1rem;
+        color: rgb(220, 220, 6);
+        font-size: 4rem;
+        
+    }
+</style>
+<main>
+    <h1>Welcome to QVITTER!!!!</h1>
+    <div class="buttoncont">
         <button><a href="/tweets">Gå till tweets!</a></button>
         <button><a href="/tweets/new">Skapa qvitt</a></button>
-        <button><a href="/login"></a></button>
-        
-    </main>
+        <button><a href="/tweets/login">Login</a></button>
+    </div>
+</main>
 
 {%endblock%}

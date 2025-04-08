@@ -4,9 +4,11 @@ import nunjucks from "nunjucks"
 import bodyParser from "body-parser"
 import morgan from "morgan"
 import tweetRouter from "./routes/tweet.js"
+import session from "express-session"
 
 const app = express()
 const port = 3000
+const saltRounds = 10;  
 
 //säger till att sevrver kan andvända sig av ditt och datt mappar
 app.use(express.static("public"))
@@ -17,7 +19,12 @@ app.use(bodyParser.json());
 app.use(express.static("public"))
 app.use(bodyParser.urlencoded({ extended: true }))
 
-
+app.use(session({
+  secret: `keyboard cat`,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { sameSite: true }
+}))
 nunjucks.configure('views', {
   autoescape: true,
   express: app,
@@ -25,9 +32,17 @@ nunjucks.configure('views', {
 
 
 app.get("/", async (req, res) => {
+  if (req.session.views) {
+    req.session.views++
+  } else {
+    req.session.views = 1
+  }
+  console.log(req.session.views)
+
   res.render("index.njk", {
     title: "Hello World",
     message: "Hello World",
+
   })
 })
 

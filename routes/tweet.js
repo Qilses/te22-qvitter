@@ -1,4 +1,4 @@
-import express from "express"
+import express, { Router } from "express"
 import pool from "../db.js"
 import { body, matchedData, validationResult } from "express-validator"
 
@@ -37,6 +37,7 @@ router.get("/new", (req, res) => {
     })
 })
 
+
 router.post("/new", async (req, res) => {
     const message = req.body.message
     const author_id = 1
@@ -48,7 +49,7 @@ router.post("/new", async (req, res) => {
       ])
     res.redirect("/")
 })
-
+Router
 
 
 router.get("/:id/edit", async (req, res) => {
@@ -76,6 +77,49 @@ router.post("/edit",
     await pool.promise().query("UPDATE tweet SET message = ?, updated_at = ? WHERE id = ?", [message, timestamp, id])
     res.redirect("/")
   })
+
+  router.get("/login", async (req, res) => {
+    res.render("login.njk", {
+      title: "Logga in!",
+      message: "Skriv in ditt användarnamn, email och lösenord för att logga in",
+    });
+  
+  });
+  
+
+  router.post("/login", async (req, res) => {
+    console.log(req.body)
+    const { username, password } = req.body;
+
+    // Hämta användare från databasen
+    const [result] = await pool.promise().query(
+        ` 
+        SELECT * FROM user
+        WHERE name = ?` , [username]
+
+    );
+
+    if (result[0] == undefined) {
+        res.render("login.njk", {
+            title: "Logga in!",
+            message: "Username or password wrong!",
+        })
+    } else {
+        bcrypt.compare(password, result[0].user_password, function (err, result) {
+            if (result == true) {
+                res.render("dashboard.njk", {})
+            } else {
+                res.render("login.njk", {
+                    title: "Logga in!",
+                    message: "Username or password wrong!",
+                })
+
+            }
+        });
+    }
+}
+
+)
 
 
 export default router
