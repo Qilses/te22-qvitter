@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon -e js,html,njk,json,css ./server.js"
+    "dev": "nodemon -e js,html,njk,json,css ./server.js",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "16"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +24,9 @@
     "morgan": "^1.10.0",
     "mysql2": "^3.12.0",
     "nunjucks": "^3.2.4",
-    "session": "^0.1.0"
+    "session": "^0.1.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

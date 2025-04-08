@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas">Skäms, dinosauriewebbläsare omg!</canvas>
+
+    <script>
+        const canvas = document.querySelector("#canvas")
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+        const ctx = canvas.getContext("2d")
+
+        const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
+
+        document.addEventListener("mousemove", (e) => {
+            ctx.fillStyle = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`
+            ctx.beginPath()
+            ctx.arc(clamp(e.offsetX, 0, canvas.width), clamp(e.offsetY, 0, canvas.height), 40, 0, 2 * Math.PI)
+            ctx.fill()
+        })
+
+        document.addEventListener("click", (e) => {
+            console.log(canvas.width, canvas.height)
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.beginPath()
+        })
+    </script>
+</body>
+
+</html>
