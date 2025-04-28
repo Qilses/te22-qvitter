@@ -1,33 +1,45 @@
 {%extends "layout.njk"%}
 {%block content%}
+
 <style>
-    body,
-    html {
-        text-align: center;
-    }
-
-    h1 {
-        font-size: 4rem;
-        font-weight: lighter;
-    }
-
-    .buttoncont {
+    .container1 {
         display: grid;
-        grid-gap: 1rem;
-        color: rgb(220, 220, 6);
-        font-size: 4rem;
+        grid-template-rows: 40rem;
+        grid-template-columns: 50% 40%; 
+
+    }
+
+    .container2 {
+        display: grid;
+        grid-template-rows: 10rem 10rem 10rem;
+        grid-template-columns: 30%, 30%;
+        position: right;
+        grid-row-gap: 3rem;
+        margin: 5rem;
+
+    }
+
+    .index button {
+        border-radius: 2px;
+        transition-duration: 0.4s;
+        font-size: large;
+        width: 40rem;
         
     }
-    .button press{
-
+    img{
+        width: 45rem;
+        height: auto;
     }
 </style>
-<main>
+<main class="index">
     <h1>Welcome to QVITTER!!!!</h1>
-    <div class="buttoncont">
-        <button><a href="/tweets">Gå till tweets!</a></button>
-        <button><a href="/tweets/new">Skapa qvitt</a></button>
-        <button><a href="/tweets/login">Login</a></button>
+    <div class="container1">
+        <img src="img/Qvitter img.png" alt="qvitter bird">
+        <div class="container2">
+            <button><a href="/tweets">Gå till tweets!</a></button>
+            <button><a href="/tweets/new">Skapa qvitt</a></button>
+            <button><a href="/tweets/login">Login</a></button>
+        </div>
     </div>
 </main>
 
