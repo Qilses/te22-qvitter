@@ -87,25 +87,25 @@ router.post("/edit",
   
 
   router.post("/login", async (req, res) => {
-    console.log(req.body)
     const { username, password } = req.body;
     // Hämta användare från databasen
     const [result] = await pool.promise().query(
         ` 
-        SELECT * FROM user
-        WHERE name = ?` , [username]
-
+        SELECT * FROM users_login
+        WHERE user_name = ?` , [username]
+        
     );
 
     if (result[0] == undefined) {
         res.render("login.njk", {
             title: "Logga in!",
-            message: "Username or password wrong!",
+            message: "Username or password wrong!"
         })
     } else {
         bcrypt.compare(password, result[0].user_password, function (err, result) {
             if (result == true) {
                 res.render("tweet.njk", {})
+
             } else {
                 res.render("login.njk", {
                     title: "Logga in!",
@@ -118,6 +118,20 @@ router.post("/edit",
 }
 
 )
+
+router.get("/newuser", (req, res) => {
+    let user_password = password
+    res.render("newuser.njk", {
+        title: "CREATE A NEW USER!",    
+        message:"Set a Username, password and a email to create a new user :)"
+    })
+    bcrypt.hash(user_password, 10, function (err, hash) {
+        // här får vi nu tag i lösenordets hash i variabeln hash
+        console.log(hash)
+        
+    })
+
+})
 
 
 export default router
