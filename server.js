@@ -5,6 +5,7 @@ import bodyParser from "body-parser"
 import morgan from "morgan"
 import tweetRouter from "./routes/tweet.js"
 import session from "express-session"
+import logger from "morgan"
 
 const app = express()
 const port = 3000
@@ -25,26 +26,14 @@ app.use(session({
   saveUninitialized: true,
   cookie: { sameSite: true }
 }))
-nunjucks.configure('views', {
+nunjucks.configure("views", {
   autoescape: true,
   express: app,
 })
 
-
-app.get("/", async (req, res) => {
-  if (req.session.views) {
-    req.session.views++
-  } else {
-    req.session.views = 1
-  }
-  console.log(req.session.views)
-
-  res.render("index.njk", {
-    title: "Hello World",
-    message: "Hello World",
-
-  })
-})
+app.use(express.static("public"))
+app.use(logger("dev"))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 //säger till servern att den ska andvända routes mappen
 
