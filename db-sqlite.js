@@ -30,7 +30,7 @@ await db.exec(`
 // Insert a default user if the table is empty
 const userCount = await db.get('SELECT COUNT(*) AS count FROM user');
 if (userCount.count === 0) {
-  await db.run('INSERT INTO user (name) VALUES (?)', 'Anonymous');
+  await db.run('INSERT INTO user (name , password) VALUES (? ,?)', 'man', "$2b$10$.sgHXzn4YNImwujwSJGaP.yom9zCLrfHn1P6soeonlya4umqCakcC");
 }
 
 // Export the database connection

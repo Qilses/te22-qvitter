@@ -1,5 +1,5 @@
 import express, { Router } from "express"
-import pool from "../db.js"
+import db from "../db-sqlite.js"
 import { body, matchedData, validationResult } from "express-validator"
 import bcrypt from "bcrypt" 
 
@@ -8,9 +8,9 @@ const router = express.Router()
 
 //routes här under, Index.njk är default route.
 router.get("/", async (req, res) => {
-    const [tweets] = await pool.promise().query(
+    const [tweets] = await db.all(
         `   
-        SELECT tweet.*, user.name 
+        SELECT tweet.*, name 
         FROM tweet
         JOIN user
         ON tweet.author_id = user.id;
@@ -25,7 +25,7 @@ router.get("/:id/delete", async (req, res) => {
     body("id").isInt(),
 
     
-    await pool.promise().query("DELETE FROM tweet WHERE id = ?", [id])
+    await db.run("DELETE FROM tweet WHERE id = ?", [id])
     res.redirect("/")
 })
 
@@ -40,9 +40,7 @@ router.get("/new", (req, res) => {
 router.post("/new", async (req, res) => {
     const message = req.body.message
     const author_id = 1
-    await pool
-      .promise()
-      .query("INSERT INTO tweet (message, author_id) VALUES (?, ?)", [
+    await db.run("INSERT INTO tweet (message, author_id) VALUES (?, ?)", [
         message,
         author_id,
       ])
@@ -54,7 +52,7 @@ Router
 router.get("/:id/edit", async (req, res) => {
     const id = req.params.id
     if (!Number.isInteger(Number(id))) { return res.status(400).send("Invalid ID") }
-    const [rows] = await pool.promise().query("SELECT * FROM tweet WHERE id = ?", [id])
+    const [rows] = await db.get("SELECT * FROM tweet WHERE id = ?", [id])
     if (rows.length === 0) {
       return res.status(404).send("Tweet not found")
     }
@@ -73,7 +71,7 @@ router.post("/edit",
     const { id, message } = matchedData(req) // req.params.message varför inte?
     const timestamp = new Date().toISOString().slice(0, 19).replace("T", " ")
     console.log(timestamp)
-    await pool.promise().query("UPDATE tweet SET message = ?, updated_at = ? WHERE id = ?", [message, timestamp, id])
+    await db.run("UPDATE tweet SET message = ?, updated_at = ? WHERE id = ?", [message, timestamp, id])
     res.redirect("/")
   })
 
@@ -89,20 +87,23 @@ router.post("/edit",
   router.post("/login", async (req, res) => {
     const { username, password } = req.body;
     // Hämta användare från databasen
-    const [result] = await pool.promise().query(
+    const result = await db.get(
         ` 
-        SELECT * FROM users_login
-        WHERE user_name = ?` , [username]
+        SELECT * FROM user
+        WHERE user.name = ?` , username
         
     );
-
-    if (result[0] == undefined) {
+        console.log(result)
+        console.log(req.body);
+        
+    
+    if (result == undefined) {
         res.render("login.njk", {
             title: "Logga in!",
             message: "Username or password wrong!"
         })
     } else {
-        bcrypt.compare(password, result[0].user_password, function (err, result) {
+        bcrypt.compare(password, result.password, function (err, result) {
             if (result == true) {
                 res.render("tweet.njk", {})
 
