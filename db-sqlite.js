@@ -33,10 +33,16 @@ const userCount = await db.get('SELECT COUNT(*) AS count FROM user');
 const messageCount = await db.get('SELECT COUNT(*) AS count FROM tweet');
 if (userCount.count === 0) {
   await db.run('INSERT INTO user (name , password) VALUES (? ,?)', 'man', "$2b$10$.sgHXzn4YNImwujwSJGaP.yom9zCLrfHn1P6soeonlya4umqCakcC");
+  await db.run('INSERT INTO user (name , password) VALUES (? ,?)', 'robin', "$2b$10$SSd0NJcBeBE/H7C1T0IwJuSgnrHTHvDV.tZRw6aRsjsvCbDocGDsm");
+
 }
 if (messageCount === 0) {
-  await db.run('INSERT INTO tweet (message, author_id) VALUES (?, ?)','man','1');
+  await db.run('INSERT INTO tweet (message, author_id) VALUES (?, ?)', 'Babago', '1');
+  await db.run('INSERT INTO tweet (message, author_id) VALUES (?, ?)', 'Hejsan', '2');
+
 }
+
+
 console.log(messageCount, userCount);
 
 

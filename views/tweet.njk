@@ -2,32 +2,94 @@
 {%block content%}
 
 <main>
-    <h1>{{ message }}</h1>
-    <button><a href="/tweets/new">Skapa egen Qvitt</a></button>
-    
-    {% for tweet in tweets %}
-    <li class="tweet">
 
-        <article>
-          <h1>{{ tweet.message }}</h1>
-          <header>
-            <h2>{{ tweet.name }}</h2>
-            <time datetime="{{ tweet.date }}">{{ tweet.date }}</time>
-          </header>
-          <footer>
-            <ul >
-              <li><button>Shared</button></li>
-              <li><button>Reply</button></li>
-              <li><button>Favourite</button></li>
-              <li><button><a href="/">Edit</a></button></li>
-              <li><button><a href="/tweets/{{ tweet.id }}/delete">Skräpa</a></button></li>
-            </ul>
-          </footer>
-        </article>
-      </li>
-    {% endfor %}
+  <h1>{{ message }}</h1>
+  
+  <style>
     
- </ul>
+    .HamburgerMenu {
+      display: grid;
+      grid-template-columns: auto;
+      border: none;
+      width: 100px;
+      height: 100px;
+      background-color: rgba(249, 236, 217, 255);
+    }
+
+    .topnav {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .topnav #myLinks {
+      display: none;
+    }
+
+    .topnav a {
+      color: white;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+      display: block;
+      background-color: black;
+      width: 1px;
+      height: 1px;
+    }
+  </style>
+
+  <button class="HamburgerMenu">
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <img src="/img/NavMenu.webp" alt="ham">
+      <i class="fa fa-bars"></i>
+  </button>
+
+  <div class="topnav">
+      <div id="myLinks">
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+        <a href="/tweets/new">Skapa egen Qvitt</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function myFunction() {
+      var x = document.getElementById("myLinks");
+      if (x.style.display === "block") {
+        x.style.display = "none";
+      } else {
+        x.style.display = "block";
+      }
+    }
+  </script>
+
+
+
+
+  {% for tweet in tweets %}
+  <li class="tweet">
+
+    <article>
+      <h1>{{ tweet.message }}</h1>
+      <header>
+        <h2>{{ tweet.name }}</h2>
+        <time datetime="{{ tweet.date }}">{{ tweet.date }}</time>
+      </header>
+      <footer>
+        <ul>
+          <li><button>Shared</button></li>
+          <li><button>Reply</button></li>
+          <li><button>Favourite</button></li>
+          <li><button><a href="/">Edit</a></button></li>
+          <li><button><a href="/tweets/{{ tweet.id }}/delete">Skräpa</a></button></li>
+        </ul>
+      </footer>
+    </article>
+  </li>
+  {% endfor %}
+
+  </ul>
 </main>
 <script>
   document.addEventListener("DOMContentLoaded", function () {

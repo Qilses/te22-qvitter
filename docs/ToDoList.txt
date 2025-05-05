@@ -1,0 +1,14 @@
+Ska göras:
+Skapa en funktionell login - gör så att man kan logga in till andra andvändare. //Webbserverprogramering
+    Ska fixa så att den kan lägga till tweets till tweets
+Gör så att sqlite kan spara meddelanden till sed andvändare //Webbserverprogramering
+
+
+
+Klart:
+
+Kan göra efter:
+Fixa bild efter inloggning!
+Fixa snyggare Tweets page!
+hamburher meny Fixa
+Fixa så att bara en andvändare kan delete sina egna tweets!

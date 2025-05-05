@@ -7,7 +7,7 @@ const router = express.Router()
 
 //routes här under, Index.njk är default route.
 router.get("/", async (req, res) => {
-    const [tweets] = await db.all(
+    const tweets = await db.all(
         `   
         SELECT tweet.*, name 
         FROM tweet
@@ -15,11 +15,52 @@ router.get("/", async (req, res) => {
         ON tweet.author_id = user.id;
     `
     )
-    console.log(req.session.views)
+    console.log("Andvändare In logg:", req.session.loggedin)
+
     res.render("tweet.njk", { title: "Alla Qvitts", message: "Qvitter", tweets })
 
 })
+router.get("/login", async (req, res) => {
+    res.render("login.njk", {
+        title: "Logga in!",
+        message: "Skriv in ditt användarnamn, email och lösenord för att logga in",
+    });
 
+});
+
+router.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    // Hämta användare från databasen
+    const user = await db.get(
+        "SELECT * FROM user WHERE name = ?", username
+
+    );
+
+    console.log(user);
+    console.log(req.body);
+
+
+    if (user == undefined) {
+        res.render("login.njk", {
+            title: "Logga in!",
+            message: "Username or password wrong!"
+        })
+    } else {
+        bcrypt.compare(password, user.password, function (err, isMatch) {
+            if (isMatch) {
+                req.session.loggedin = true;
+                req.session.username = user.name;
+                res.render("index.njk", { title: "Qvitter", message: "Välkommen: " + user.name });
+            } else {
+                res.render("login.njk", {
+                    title: "Logga in!",
+                    message: "Username or password wrong!",
+                });
+            }
+        });
+    }
+})
 
 router.get("/:id/delete", async (req, res) => {
     const id = req.params.id
@@ -31,6 +72,7 @@ router.get("/:id/delete", async (req, res) => {
 })
 
 router.get("/new", (req, res) => {
+    // finns session?
     res.render("new.njk", {
         title: "Testa att skapa DIN qvitt!",
         message: "Twitter finns inte!",
@@ -39,15 +81,29 @@ router.get("/new", (req, res) => {
 
 
 router.post("/new", async (req, res) => {
-    const message = req.body.message
-    const author_id = 1
-    await db.run("INSERT INTO tweet (message, author_id) VALUES (?, ?)", [
-        message,
-        author_id,
-    ])
-    res.redirect("/tweets")
+    // authot id i session
+    console.log("AndvändareInlogg:", req.session.loggedin, username)
+
+            const { author_id, message } = req.body;
+            await db.run("INSERT INTO tweet (message, author_id) VALUES (?, ?)", message, author_id);
+            res.redirect("/tweets");
+      
 })
 Router
+
+router.get("/newuser", (req, res) => {
+    res.render("newuser.njk", {
+        title: "CREATE A NEW USER!",
+        message: "Set a Username, password and a email to create a new user :)"
+    })
+    let password = "robin";
+    bcrypt.hash(password, 10, function (err, hash) {
+        // här får vi nu tag i lösenordets hash i variabeln hash
+        console.log(hash)
+
+    })
+
+})
 
 
 router.get("/:id/edit", async (req, res) => {
@@ -76,64 +132,6 @@ router.post("/edit",
         res.redirect("/")
     })
 
-router.get("/login", async (req, res) => {
-    res.render("login.njk", {
-        title: "Logga in!",
-        message: "Skriv in ditt användarnamn, email och lösenord för att logga in",
-    });
-
-});
-
-
-router.post("/login", async (req, res) => {
-    const { username, password } = req.body;
-    // Hämta användare från databasen
-    const result = await db.get(
-        ` 
-        SELECT * FROM user
-        WHERE user.name = ?` , username
-
-    );
-    console.log(result)
-    console.log(req.body);
-
-
-    if (result == undefined) {
-        res.render("login.njk", {
-            title: "Logga in!",
-            message: "Username or password wrong!"
-        })
-    } else {
-        bcrypt.compare(password, result.password, function (err, result) {
-            if (result == true) {
-                res.render("tweet.njk", {title: "Alla Qvitts", message: "Qvitter"})
-
-            } else {
-                res.render("login.njk", {
-                    title: "Logga in!",
-                    message: "Username or password wrong!",
-                })
-
-            }
-        });
-    }
-}
-
-)
-
-router.get("/newuser", (req, res) => {
-    let user_password = password
-    res.render("newuser.njk", {
-        title: "CREATE A NEW USER!",
-        message: "Set a Username, password and a email to create a new user :)"
-    })
-    bcrypt.hash(user_password, 10, function (err, hash) {
-        // här får vi nu tag i lösenordets hash i variabeln hash
-        console.log(hash)
-
-    })
-
-})
 
 
 export default router

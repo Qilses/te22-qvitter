@@ -30,12 +30,6 @@ a:active {
   font-weight: bolder;
 }
 
-.index body,
-html {
-  text-align: center;
-  
-}
-
 .index h1 {
   font-size: 4rem;
   font-weight: lighter;

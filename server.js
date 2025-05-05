@@ -5,11 +5,10 @@ import bodyParser from "body-parser"
 import morgan from "morgan"
 import tweetRouter from "./routes/tweet.js"
 import session from "express-session"
-import logger from "morgan"
 
 const app = express()
 const port = 3000
-const saltRounds = 10;  
+const saltRounds = 10;
 
 //säger till att sevrver kan andvända sig av ditt och datt mappar
 app.use(express.static("public"))
@@ -31,10 +30,32 @@ nunjucks.configure("views", {
   express: app,
 })
 
-app.use(express.static("public"))
-app.use(logger("dev"))
-app.use(bodyParser.urlencoded({ extended: true }))
+app.get("/", async (req, res) => {
+  if (req.session.views) {
+    req.session.views++
+  } else {
+    req.session.views =  1
+  }
+  
+  console.log(req.session.views)
 
+  if (req.session.loggedin === true) {  
+    console.log("Andvändare ÄR inloggad", req.session.loggedin)
+    res.render("index.njk", {
+      title: "Hello World",
+      message: "Hello World",
+  
+    })
+  } else {
+    console.log("Andvändare INTE inloggad")
+    res.render("login.njk", {
+      title: "Logga in!",
+      message: "Username or password wrong!"
+  })
+  }
+
+  
+})
 //säger till servern att den ska andvända routes mappen
 
 app.use("/tweets", tweetRouter)

@@ -9,10 +9,10 @@
     <main>
         <h1>{{ title }}</h1>
         <h2>{{ message }}</h2>
-        <form action="/newuser" method="POST">
-            <input type="text" name="username" placeholder="Användarnamn" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Lösenord" required>
+        <form action="/tweet/newuser" method="POST">
+            <input type="text" name="username" id="användarnamn" placeholder="Användarnamn">
+            <input type="email" name="email" id="email" placeholder="Email" >
+            <input type="password" name="password" id="password" placeholder="Lösenord" required>
             <button type="submit">Create!</button>
         </form>
         <h3>Har redan ett konto? Logina in här!</h3>
