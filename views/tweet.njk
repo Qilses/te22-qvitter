@@ -15,56 +15,76 @@
       height: 100px;
       background-color: rgba(249, 236, 217, 255);
     }
-
-    .topnav {
-      overflow: hidden;
+    .overlay {
+      height: 0%;
+      width: 100%;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0, 0.9);
+      overflow-y: hidden;
+      transition: 0.5s;
+    }
+    
+    .overlay-content {
       position: relative;
+      top: 25%;
+      width: 100%;
+      text-align: center;
+      margin-top: 30px;
     }
-
-    .topnav #myLinks {
-      display: none;
-    }
-
-    .topnav a {
-      color: white;
-      padding: 14px 16px;
+    
+    .overlay a {
+      padding: 8px;
       text-decoration: none;
-      font-size: 17px;
+      font-size: 36px;
+      color: #818181;
       display: block;
-      background-color: black;
-      width: 1px;
-      height: 1px;
+      transition: 0.3s;
     }
+    
+    .overlay a:hover, .overlay a:focus {
+      color: #f1f1f1;
+    }
+    
+    .overlay .closebtn {
+      position: absolute;
+      top: 20px;
+      right: 45px;
+      font-size: 60px;
+    }
+    
+    @media screen and (max-height: 450px) {
+      .overlay {overflow-y: auto;}
+      .overlay a {font-size: 20px}
+      .overlay .closebtn {
+      font-size: 40px;
+      top: 15px;
+      right: 35px;
+      }
+    }
+
+    
+
+  
   </style>
 
-  <button class="HamburgerMenu">
-    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-      <img src="/img/NavMenu.webp" alt="ham">
-      <i class="fa fa-bars"></i>
-  </button>
-
-  <div class="topnav">
-      <div id="myLinks">
-        <a href="#news">News</a>
-        <a href="#contact">Contact</a>
-        <a href="#about">About</a>
+  <div id="myNav" class="overlay">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <div id="overlay-content">
+        <a href="/">Home</a>
+        <a href="/tweets">Tweets</a>
         <a href="/tweets/new">Skapa egen Qvitt</a>
       </div>
     </div>
   </div>
 
-  <script>
-    function myFunction() {
-      var x = document.getElementById("myLinks");
-      if (x.style.display === "block") {
-        x.style.display = "none";
-      } else {
-        x.style.display = "block";
-      }
-    }
-  </script>
 
-
+  <button class="HamburgerMenu">
+      <img onclick="openNav()" src="/img/NavMenu.webp" alt="ham">
+  </button>
 
 
   {% for tweet in tweets %}
@@ -116,5 +136,12 @@
       timeElement.textContent = displayText;
     });
   });
+  function openNav() {
+    document.getElementById("myNav").style.height = "30%";
+  }
+  
+  function closeNav() {
+    document.getElementById("myNav").style.height = "0%";
+  }
 </script>
 {%endblock%}

@@ -1,11 +1,13 @@
 Ska göras:
-Skapa en funktionell login - gör så att man kan logga in till andra andvändare. //Webbserverprogramering
-    Ska fixa så att den kan lägga till tweets till tweets
-Gör så att sqlite kan spara meddelanden till sed andvändare //Webbserverprogramering
-
 
 
 Klart:
+Skapa en funktionell login - gör så att man kan logga in till andra andvändare. //Webbserverprogramering
+    Ska fixa så att den kan lägga till tweets till tweets
+    
+Gör så att sqlite kan spara meddelanden till sed andvändare //Webbserverprogramering
+
+
 
 Kan göra efter:
 Fixa bild efter inloggning!

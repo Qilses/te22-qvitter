@@ -42,8 +42,8 @@ app.get("/", async (req, res) => {
   if (req.session.loggedin === true) {  
     console.log("Andvändare ÄR inloggad", req.session.loggedin)
     res.render ("index.njk", {
-      title: "Hello World",
-      message: "Hello World",
+      title: "Qvitter",
+      message: "Välkomen, ",
   
     })
   } else if (req.session.loggedin === undefined || false) {
