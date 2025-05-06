@@ -41,14 +41,14 @@ app.get("/", async (req, res) => {
 
   if (req.session.loggedin === true) {  
     console.log("Andvändare ÄR inloggad", req.session.loggedin)
-    res.render("index.njk", {
+    res.render ("index.njk", {
       title: "Hello World",
       message: "Hello World",
   
     })
-  } else {
+  } else if (req.session.loggedin === undefined || false) {
     console.log("Andvändare INTE inloggad")
-    res.render("login.njk", {
+    res.render ("login.njk", {
       title: "Logga in!",
       message: "Username or password wrong!"
   })

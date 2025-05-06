@@ -49,8 +49,13 @@ router.post("/login", async (req, res) => {
     } else {
         bcrypt.compare(password, user.password, function (err, isMatch) {
             if (isMatch) {
-                req.session.loggedin = true;
-                req.session.username = user.name;
+                Object.assign(req.session, {
+                    loggedin: true,
+                    user: username,
+                    author_id: user.id
+                });                
+                console.log(req.session)
+
                 res.render("index.njk", { title: "Qvitter", message: "Välkommen: " + user.name });
             } else {
                 res.render("login.njk", {
@@ -81,14 +86,19 @@ router.get("/new", (req, res) => {
 
 
 router.post("/new", async (req, res) => {
-    // authot id i session
-    console.log("AndvändareInlogg:", req.session.loggedin, username)
+    if (req.session.loggedin === true) {
+        const { message } = req.body;
+        const author_id = req.session.author_id;
 
-            const { author_id, message } = req.body;
-            await db.run("INSERT INTO tweet (message, author_id) VALUES (?, ?)", message, author_id);
-            res.redirect("/tweets");
-      
+        await db.run(
+            'INSERT INTO tweet (message, author_id) VALUES (?, ?)', [message, author_id]
+        );
+        res.redirect("/tweets");
+    } else {
+        res.redirect("../login");
+    }
 })
+
 Router
 
 router.get("/newuser", (req, res) => {
