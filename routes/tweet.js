@@ -15,9 +15,15 @@ router.get("/", async (req, res) => {
         ON tweet.author_id = user.id;
     `
     )
-    console.log("Andvändare In logg:", req.session.loggedin)
+    if (req.session.loggedin === true) {
+        console.log("Andvändare In logg:", req.session.loggedin)
+        res.render("tweet.njk", { title: "Alla Qvitts", message: "Qvitter", tweets })
 
-    res.render("tweet.njk", { title: "Alla Qvitts", message: "Qvitter", tweets })
+    } else {
+        res.render("login.njk", { title: "Logga in innan du fortsätter", message: ":D" })
+
+    }
+
 
 })
 router.get("/login", async (req, res) => {
@@ -30,16 +36,13 @@ router.get("/login", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
-
     // Hämta användare från databasen
     const user = await db.get(
         "SELECT * FROM user WHERE name = ?", username
 
     );
-
     console.log(user);
     console.log(req.body);
-
 
     if (user == undefined) {
         res.render("login.njk", {
@@ -53,7 +56,7 @@ router.post("/login", async (req, res) => {
                     loggedin: true,
                     user: username,
                     author_id: user.id
-                });                
+                });
                 console.log(req.session)
 
                 res.render("index.njk", { title: "Qvitter", message: "Välkommen: " + user.name });
@@ -95,7 +98,8 @@ router.post("/new", async (req, res) => {
         );
         res.redirect("/tweets");
     } else {
-        res.redirect("../login");
+        res.render("login.njk", { title: "Logga in innan du fortsätter", message: ":D" })
+
     }
 })
 
@@ -106,13 +110,31 @@ router.get("/newuser", (req, res) => {
         title: "CREATE A NEW USER!",
         message: "Set a Username, password and a email to create a new user :)"
     })
-    let password = "robin";
-    bcrypt.hash(password, 10, function (err, hash) {
-        // här får vi nu tag i lösenordets hash i variabeln hash
-        console.log(hash)
+})
 
-    })
+router.post("/newuser", async (req, res) => {
+    const { username, password } = req.body;
+    const user = await db.get(
+        "SELECT * FROM user WHERE name = ?", username
 
+    );
+    console.log(req.body)
+
+    if (user === true) {
+        res.render("newuser.njk", {
+            title: "user exist pls try gin",
+            message: "Username or password wrong!"
+        })
+    } else {
+        try {
+            const hash = await bcrypt.hash(password, 10);
+            await db.run('INSERT INTO user (name, password) VALUES (?, ?)', username, hash);
+            res.render("login.njk", { title: "Andvändare Skapad", message: "Snälla logga in!" })
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Internal server error");
+        }
+    }
 })
 
 

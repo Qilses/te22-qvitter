@@ -1,5 +1,5 @@
 Ska göras:
-
+    Fixa så att man kommer till login om man inte är logged in
 
 Klart:
 Skapa en funktionell login - gör så att man kan logga in till andra andvändare. //Webbserverprogramering

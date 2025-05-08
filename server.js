@@ -38,21 +38,15 @@ app.get("/", async (req, res) => {
   }
   
   console.log(req.session.views)
-
-  if (req.session.loggedin === true) {  
-    console.log("Andvändare ÄR inloggad", req.session.loggedin)
-    res.render ("index.njk", {
-      title: "Qvitter",
-      message: "Välkomen, ",
-  
-    })
-  } else if (req.session.loggedin === undefined || false) {
+  if (req.session.loggedin === undefined || false) {
     console.log("Andvändare INTE inloggad")
     res.render ("login.njk", {
       title: "Logga in!",
       message: "Username or password wrong!"
-  })
-  }
+  })} else if (req.session.loggedin === true) {  
+    console.log("Andvändare ÄR inloggad", req.session.loggedin)
+    
+  } 
 
   
 })
