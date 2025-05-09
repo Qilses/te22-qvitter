@@ -1,9 +1,5 @@
 {%extends "layout.njk"%}
 {%block content%}
-<script>
-   
-
-</script>
 <style>
     .container1 {
         display: grid;
@@ -47,6 +43,7 @@
 </style>
 <main class="index">
     <h1>Welcome to QVITTER!!!!</h1>
+    {%include "hamhurger.njk" %}
     <h2>{{message}}{{user.name}}</h2>
 
     <div class="container1">

@@ -1,11 +1,43 @@
-import express, { Router } from "express"
-import db from "../db-sqlite.js"
-import { body, matchedData, validationResult } from "express-validator"
-import bcrypt from "bcrypt"
+import express, { Router } from "express";
+import db from "../db-sqlite.js";
+import { body, matchedData, validationResult } from "express-validator";
+import bcrypt from "bcrypt";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
-const router = express.Router()
+const router = express.Router();
 
-//routes här under, Index.njk är default route.
+// Ensure uploads folder exists
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
+
+// Multer storage configuration
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadDir); // Specify the directory to save uploaded images
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname)); // Append timestamp to the filename
+    }
+});
+
+// Initialize multer with the storage configuration and file size limit
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 2 * 1024 * 1024 }, // 2 MB size limit
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed!'), false);
+        }
+    }
+});
+
+// Routes
 router.get("/", async (req, res) => {
     const tweets = await db.all(
         `   
@@ -14,41 +46,31 @@ router.get("/", async (req, res) => {
         JOIN user
         ON tweet.author_id = user.id;
     `
-    )
+    );
     if (req.session.loggedin === true) {
-        console.log("Andvändare In logg:", req.session.loggedin)
-        res.render("tweet.njk", { title: "Alla Qvitts", message: "Qvitter", tweets })
-
+        console.log("Andvändare In logg:", req.session.loggedin);
+        res.render("tweet.njk", { title: "Alla Qvitts", message: "Qvitter", tweets });
     } else {
-        res.render("login.njk", { title: "Logga in innan du fortsätter", message: ":D" })
-
+        res.render("login.njk", { title: "Logga in innan du fortsätter", message: ":D" });
     }
+});
 
-
-})
 router.get("/login", async (req, res) => {
     res.render("login.njk", {
         title: "Logga in!",
         message: "Skriv in ditt användarnamn, email och lösenord för att logga in",
     });
-
 });
 
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
-    // Hämta användare från databasen
-    const user = await db.get(
-        "SELECT * FROM user WHERE name = ?", username
-
-    );
-    console.log(user);
-    console.log(req.body);
+    const user = await db.get("SELECT * FROM user WHERE name = ?", username);
 
     if (user == undefined) {
         res.render("login.njk", {
             title: "Logga in!",
             message: "Username or password wrong!"
-        })
+        });
     } else {
         bcrypt.compare(password, user.password, function (err, isMatch) {
             if (isMatch) {
@@ -57,8 +79,6 @@ router.post("/login", async (req, res) => {
                     user: username,
                     author_id: user.id
                 });
-                console.log(req.session)
-
                 res.render("index.njk", { title: "Qvitter", message: "Välkommen: " + user.name });
             } else {
                 res.render("login.njk", {
@@ -68,42 +88,37 @@ router.post("/login", async (req, res) => {
             }
         });
     }
-})
+});
 
 router.get("/:id/delete", async (req, res) => {
-    const id = req.params.id
-    body("id").isInt(),
-
-
-        await db.run("DELETE FROM tweet WHERE id = ?", [id])
-    res.redirect("/")
-})
+    const id = req.params.id;
+    await db.run("DELETE FROM tweet WHERE id = ?", [id]);
+    res.redirect("/tweets");
+});
 
 router.get("/new", (req, res) => {
-    // finns session?
     res.render("new.njk", {
         title: "Testa att skapa DIN qvitt!",
         message: "Twitter finns inte!",
-    })
-})
+    });
+});
 
-
-router.post("/new", async (req, res) => {
+// Handle the POST request for new tweets with image upload
+router.post('/new', upload.single('image'), async (req, res) => {
     if (req.session.loggedin === true) {
         const { message } = req.body;
         const author_id = req.session.author_id;
+        const imagePath = req.file ? req.file.path : null; // Get the path of the uploaded image
 
         await db.run(
-            'INSERT INTO tweet (message, author_id) VALUES (?, ?)', [message, author_id]
+            'INSERT INTO tweet (message, author_id, image_path) VALUES (?, ?, ?)',
+            [message, author_id, imagePath]
         );
-        res.redirect("/tweets");
+        res.redirect('/tweets');
     } else {
-        res.render("login.njk", { title: "Logga in innan du fortsätter", message: ":D" })
-
+        res.render('login.njk', { title: 'Logga in innan du fortsätter', message: ':D' });
     }
-})
-
-Router
+});
 
 router.get("/newuser", (req, res) => {
     res.render("newuser.njk", {

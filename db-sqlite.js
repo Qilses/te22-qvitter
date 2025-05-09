@@ -15,7 +15,9 @@ await db.exec(`
     message TEXT,
     author_id INTEGER,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ALTER TABLE tweet ADD COLUMN image_path TEXT;
+
   );
 `);
 // Create the user table if it doesn't exist
@@ -25,7 +27,7 @@ await db.exec(`
     name VARCHAR(255),
     password VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   );
 `);
 // Insert a default user if the table is empty

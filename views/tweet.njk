@@ -4,8 +4,8 @@
 <main>
 
   <h1>{{ message }}</h1>
-  
- 
+  {%include "hamhurger.njk" %}
+
   {% for tweet in tweets %}
   <li class="tweet">
 
@@ -55,12 +55,5 @@
       timeElement.textContent = displayText;
     });
   });
-  function openNav() {
-    document.getElementById("myNav").style.height = "30%";
-  }
-  
-  function closeNav() {
-    document.getElementById("myNav").style.height = "0%";
-  }
 </script>
 {%endblock%}
