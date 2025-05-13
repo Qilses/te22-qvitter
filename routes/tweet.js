@@ -8,11 +8,6 @@ import fs from "fs";
 
 const router = express.Router();
 
-// Ensure uploads folder exists
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-}
 
 // Multer storage configuration
 const storage = multer.diskStorage({
