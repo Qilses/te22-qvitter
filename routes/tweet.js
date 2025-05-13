@@ -2,35 +2,9 @@ import express, { Router } from "express";
 import db from "../db-sqlite.js";
 import { body, matchedData, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
+
 
 const router = express.Router();
-
-
-// Multer storage configuration
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadDir); // Specify the directory to save uploaded images
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname)); // Append timestamp to the filename
-    }
-});
-
-// Initialize multer with the storage configuration and file size limit
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 2 * 1024 * 1024 }, // 2 MB size limit
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith('image/')) {
-            cb(null, true);
-        } else {
-            cb(new Error('Only image files are allowed!'), false);
-        }
-    }
-});
 
 // Routes
 router.get("/", async (req, res) => {
@@ -98,17 +72,15 @@ router.get("/new", (req, res) => {
     });
 });
 
-// Handle the POST request for new tweets with image upload
-router.post('/new', upload.single('image'), async (req, res) => {
+router.post('/new', async (req, res) => {
     if (req.session.loggedin === true) {
         const { message } = req.body;
         const author_id = req.session.author_id;
-        const imagePath = req.file ? req.file.path : null; // Get the path of the uploaded image
 
         await db.run(
-            'INSERT INTO tweet (message, author_id, image_path) VALUES (?, ?, ?)',
-            [message, author_id, imagePath]
+            'INSERT INTO tweet (message, author_id) VALUES (?, ?)',[message, author_id]
         );
+        console.log(message)
         res.redirect('/tweets');
     } else {
         res.render('login.njk', { title: 'Logga in innan du fortsätter', message: ':D' });
