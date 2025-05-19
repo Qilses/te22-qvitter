@@ -1,6 +1,5 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
-import { timeStamp } from 'console';
 
 // Open a database connection
 const db = await open({
