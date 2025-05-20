@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
     );
     if (req.session.loggedin === true) {
         console.log("Andvändare In logg:", req.session.loggedin);
-        res.render("tweet.njk", { title: "Alla Qvitts", message: "Qvitter", tweets });
+        res.render("tweet.njk", { title: "Alla Qvitts", username: req.session.user, message: "Qvitter", tweets });
     } else {
         res.render("login.njk", { title: "Logga in innan du fortsätter", message: ":D" });
     }

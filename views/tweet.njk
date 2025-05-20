@@ -1,59 +1,73 @@
-{%extends "layout.njk"%}
-{%block content%}
+{% extends "layout.njk" %}
+{% block content %}
 
 <main>
 
   <h1>{{ message }}</h1>
-  {%include "hamhurger.njk" %}
+  {% include "hamhurger.njk" %}
 
-  {% for tweet in tweets %}
-  <li class="tweet">
+  <ul>
+    {% for tweet in tweets %}
+    <li class="tweet">
 
-    <article>
-      <h1>{{ tweet.message }}</h1>
-      <header>
-        <h2>{{ tweet.name }}</h2>
-        <time datetime="{{ tweet.date }}">{{ tweet.date }}</time>
-      </header>
-      <footer>
-        <ul>
-          <li><button>Shared</button></li>
-          <li><button>Reply</button></li>
-          <li><button>Favourite</button></li>
-          <li><button><a href="/">Edit</a></button></li>
-          <li><button><a href="/tweets/{{ tweet.id }}/delete">Skräpa</a></button></li>
-        </ul>
-      </footer>
-    </article>
-  </li>
-  {% endfor %}
+      <article>
+        <h1>{{ tweet.message }}</h1>
+        <header>
+          <h2>{{ tweet.name }}</h2>
+          <!-- datetime holds UTC ISO string, displayed text will be relative time -->
+          <time datetime="{{ tweet.created_at }}" title="">{{ tweet.created_at }}</time>
+        </header>
+        <footer>
+          
+          <ul>
 
+        {% if username == tweet.name %}
+
+            <li><button>Shared</button></li>
+            <li><button>Reply</button></li>
+            <li><button>Favourite</button></li>
+            <li><button><a href="/">Edit</a></button></li>
+            <li><button><a href="/tweets/{{ tweet.id }}/delete">Skräpa</a></button></li>
+        {% endif %}
+          </ul>
+
+        </footer>
+      </article>
+    </li>
+    {% endfor %}
   </ul>
 </main>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const timeElements = document.querySelectorAll("time[datetime]");
-    timeElements.forEach(timeElement => {
-      const date = new Date(timeElement.getAttribute("datetime"));
-      const now = new Date();
-      const diffInSeconds = Math.floor((now - date) / 1000);
-      const diffInMinutes = Math.floor(diffInSeconds / 60);
-      const diffInHours = Math.floor(diffInMinutes / 60);
-      const diffInDays = Math.floor(diffInHours / 24);
+  const timeElements = document.querySelectorAll("time[datetime]");
+  timeElements.forEach(timeElement => {
+    const date = new Date(timeElement.getAttribute("datetime"));
 
-      let displayText;
-      if (diffInDays > 0) {
-        displayText = `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
-      } else if (diffInHours > 0) {
-        displayText = `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
-      } else if (diffInMinutes > 0) {
-        displayText = `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
-      } else {
-        displayText = `${diffInSeconds} second${diffInSeconds > 1 ? 's' : ''} ago`;
-      }
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
 
-      timeElement.textContent = displayText;
-    });
+    let displayText;
+    if (diffInDays > 0) {
+      displayText = `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+    } else if (diffInHours > 0) {
+      displayText = `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    } else if (diffInMinutes > 0) {
+      displayText = `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+    } else {
+      displayText = `${diffInSeconds} second${diffInSeconds > 1 ? 's' : ''} ago`;
+    }
+
+    timeElement.textContent = displayText;
+
+    // Show local date/time as tooltip
+    timeElement.title = date.toLocaleString();
   });
+});
+
 </script>
-{%endblock%}
+
+{% endblock %}
