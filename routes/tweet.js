@@ -18,9 +18,9 @@ router.get("/", async (req, res) => {
     );
     if (req.session.loggedin === true) {
         console.log("Andvändare In logg:", req.session.loggedin);
-        res.render("tweet.njk", { title: "Alla Qvitts", username: req.session.user, message: "Qvitter", tweets });
+        res.render("tweet.njk", { title: "Qvitts - Qvitter™", username: req.session.user, message: "Qvitter", tweets });
     } else {
-        res.render("login.njk", { title: "Logga in innan du fortsätter", message: ":D" });
+        res.render("login.njk", { title: "Logga in - Qvitter™", message: ":D" });
     }
 });
 
@@ -37,7 +37,7 @@ router.post("/login", async (req, res) => {
 
     if (user == undefined) {
         res.render("login.njk", {
-            title: "Logga in!",
+            title: "Logga in! - Qvitter™",
             message: "Username or password wrong!"
         });
     } else {
@@ -48,10 +48,10 @@ router.post("/login", async (req, res) => {
                     user: username,
                     author_id: user.id
                 });
-                res.render("index.njk", { title: "Qvitter", message: "Välkommen: " + user.name });
+                res.render("index.njk", { title: "Qvitter - Qvitter™", message: "Välkommen: " + user.name });
             } else {
                 res.render("login.njk", {
-                    title: "Logga in!",
+                    title: "Logga in! - Qvitter™",
                     message: "Username or password wrong!",
                 });
             }
@@ -67,7 +67,7 @@ router.get("/:id/delete", async (req, res) => {
 
 router.get("/new", (req, res) => {
     res.render("new.njk", {
-        title: "Testa att skapa DIN qvitt!",
+        title: "Create Qvitt - Qvitter™ ",
         message: "Twitter finns inte!",
     });
 });
@@ -83,13 +83,13 @@ router.post('/new', async (req, res) => {
         console.log(message)
         res.redirect('/tweets');
     } else {
-        res.render('login.njk', { title: 'Logga in innan du fortsätter', message: ':D' });
+        res.render('login.njk', { title: 'Logga in innan du fortsätter - Qvitter™', message: ':D' });
     }
 });
 
 router.get("/newuser", (req, res) => {
     res.render("newuser.njk", {
-        title: "CREATE A NEW USER!",
+        title: "CREATE A NEW USER! - Qvitter™",
         message: "Set a Username, password and a email to create a new user :)"
     })
 })
@@ -104,14 +104,14 @@ router.post("/newuser", async (req, res) => {
 
     if (user === true) {
         res.render("newuser.njk", {
-            title: "user exist pls try gin",
+            title: "user exist pls try gin - Qvitter™",
             message: "Username or password wrong!"
         })
     } else {
         try {
             const hash = await bcrypt.hash(password, 10);
             await db.run('INSERT INTO user (name, password) VALUES (?, ?)', username, hash);
-            res.render("login.njk", { title: "Andvändare Skapad", message: "Snälla logga in!" })
+            res.render("login.njk", { title: "Andvändare Skapad - Qvitter™", message: "Snälla logga in!" })
         } catch (err) {
             console.error(err);
             res.status(500).send("Internal server error");
